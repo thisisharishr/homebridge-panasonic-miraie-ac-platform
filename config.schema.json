@@ -1,0 +1,100 @@
+{
+  "pluginAlias": "Panasonic MirAIe AC Platform",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Plugin Name",
+        "description": "This name will be displayed in the Homebridge log.",
+        "type": "string",
+        "default": "Homebridge Panasonic MirAIe AC Platform",
+        "placeholder": "Homebridge Panasonic MirAIe AC Platform",
+        "required": true
+      },
+      "userId": {
+        "title": "User ID",
+        "description": "Enter the Mobile number or Email of your MirAIe platform account",
+        "type": "string",
+        "placeholder": "Mobile or Email",
+        "required": true
+      },
+      "password": {
+        "title": "Password",
+        "type": "string",
+        "placeholder": "Password",
+        "required": true
+      },
+      "logLevel": {
+        "title": "Logging level",
+        "type": "integer",
+        "placeholder": "Error",
+        "default": 4,
+        "oneOf": [
+          {
+            "title": "Off",
+            "enum": [0]
+          },
+          {
+            "title": "Debug",
+            "enum": [1]
+          },
+          {
+            "title": "Info",
+            "enum": [2]
+          },
+          {
+            "title": "Warn",
+            "enum": [3]
+          },
+          {
+            "title": "Error",
+            "enum": [4]
+          }
+        ],
+        "required": false,
+        "description": "Choose the minimum loglevel of the logs written to log file."
+      },
+      "suppressOutgoingUpdates": {
+        "title": "Suppress outgoing device updates",
+        "description": "When enabled, changes in the Home app will not be sent to MirAIe platform. Useful for testing your installation without constantly switching the state of your AC to minimise wear and tear.",
+        "type": "boolean",
+        "default": false,
+        "required": false
+      }
+    }
+  },
+  "layout": [
+    {
+      "type": "flex",
+      "flex-flow": "row wrap",
+      "items": [
+        "name"
+      ]
+    },
+    {
+      "type": "flex",
+      "flex-flow": "row wrap",
+      "items": [
+        {
+          "key": "userId",
+          "type": "string"
+        },
+        {
+          "key": "password",
+          "type": "password"
+        }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Advanced configuration",
+      "expandable": true,
+      "items": [
+        "logLevel",
+        "suppressOutgoingUpdates"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "name": "homebridge-panasonic-miraie-ac-platform",
+  "displayName": "Homebridge Panasonic MirAIe AC Platform",
+  "version": "1.0.0",
+  "description": "Homebridge platform plugin providing HomeKit support for Panasonic MirAIe air conditioners.",
+  "license": "Apache-2.0",
+  "author": "thisisharishr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thisisharishr/homebridge-panasonic-miraie-ac-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thisisharishr/homebridge-panasonic-miraie-ac-platform/issues"
+  },
+  "homepage": "https://github.com/thisisharishr/homebridge-panasonic-miraie-ac-platform#readme",
+  "funding": {
+    "type" : "github",
+    "url": "https://github.com/sponsors/thisisharishr"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "homebridge": ">=1.3.5"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "lint": "eslint src/**.ts --max-warnings=0",
+    "build": "npm run clean && tsc",
+    "build-watch": "npm run clean && tsc -w",
+    "prepublishOnly": "npm run lint && npm run build",
+    "postpublish": "npm run clean"
+  },
+  "keywords": [
+    "homebridge",
+    "homebridge-plugin",
+    "homebridge-panasonic-miraie-ac-platform",
+    "homekit",
+    "panasonic",
+    "ac",
+    "air conditioner",
+    "miraie"
+  ],
+  "dependencies": {
+    "axios": "^0.26.1",
+    "mqtt": "^4.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "@typescript-eslint/parser": "^5.19.0",
+    "eslint": "^8.13.0",
+    "homebridge": "^1.4.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}
