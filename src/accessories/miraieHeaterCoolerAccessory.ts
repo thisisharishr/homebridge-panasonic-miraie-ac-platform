@@ -407,13 +407,13 @@ export default class MirAIeHeaterCoolerAccessory {
     }
 
     private percentageToFanSpeed(percentage: number): FanSpeed | null {
-        if (percentage < 40) {
+        if (percentage <= 20) {
             return FanSpeed.AUTO;
-        } else if (percentage < 60) {
+        } else if (percentage <= 40) {
             return FanSpeed.QUIET;
-        } else if (percentage < 80) {
+        } else if (percentage <= 60) {
             return FanSpeed.LOW;
-        } else if (percentage < 100) {
+        } else if (percentage <= 80) {
             return FanSpeed.MEDIUM;
         } else if (percentage == 100) {
             return FanSpeed.HIGH;
