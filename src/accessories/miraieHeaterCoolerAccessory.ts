@@ -1,4 +1,4 @@
-import {CharacteristicValue, HAPStatus, PlatformAccessory, Service} from 'homebridge';
+import {CharacteristicValue, Formats, HAPStatus, PlatformAccessory, Service} from 'homebridge';
 import PanasonicMirAIePlatform from '../platform/panasonicMiraiePlatform';
 import {
     CommandType,
@@ -84,6 +84,13 @@ export default class MirAIeHeaterCoolerAccessory {
         // Rotation Speed (optional)
         this.service
             .getCharacteristic(this.platform.Characteristic.RotationSpeed)
+            .setProps({
+                format: Formats.INT,
+                unit: null,
+                minValue: 0,
+                maxValue: 100,
+                minStep: 25,
+            })
             .onSet(this.setRotationSpeed.bind(this));
 
         // Swing Mode (optional)
@@ -247,7 +254,7 @@ export default class MirAIeHeaterCoolerAccessory {
 
 
             // Rotation Speed (optional)
-            const fanSpeed = this.fanSpeedToPercentage(deviceStatus.acfs);
+            const fanSpeed = this.fanSpeedToNumber(deviceStatus.acfs);
             if (fanSpeed != null) {
                 this.service.getCharacteristic(this.platform.Characteristic.RotationSpeed)
                     .updateValue(fanSpeed);
@@ -317,9 +324,10 @@ export default class MirAIeHeaterCoolerAccessory {
 
     private async setRotationSpeed(value: CharacteristicValue) {
         this.validateDeviceConnectionStatus();
-        const fanSpeed = this.percentageToFanSpeed(value as number);
-
-        this.sendDeviceUpdate(this.accessory.context.device.topic[0], fanSpeed.toString(), CommandType.FAN);
+        const fanSpeed = this.numberToFanSpeed(value as number);
+        if (fanSpeed != null) {
+            this.sendDeviceUpdate(this.accessory.context.device.topic[0], fanSpeed.toString(), CommandType.FAN);
+        }
     }
 
     private async setSwingMode(value: CharacteristicValue) {
@@ -381,7 +389,7 @@ export default class MirAIeHeaterCoolerAccessory {
         }
     }
 
-    private fanSpeedToPercentage(fanSpeed: string): number {
+    private fanSpeedToNumber(fanSpeed: string): number | null {
         switch (fanSpeed) {
             case FanSpeed.AUTO:
                 return 0;
@@ -396,20 +404,24 @@ export default class MirAIeHeaterCoolerAccessory {
             default:
                 this.log.error(`Unknown FanSpeed string [${fanSpeed}]`)
         }
-        return 0;
+        return null;
     }
 
-    private percentageToFanSpeed(percentage: number): FanSpeed {
-        if (percentage < 25) {
-            return FanSpeed.AUTO;
-        } else if (percentage < 50) {
-            return FanSpeed.QUIET;
-        } else if (percentage < 75) {
-            return FanSpeed.LOW;
-        } else if (percentage < 100) {
-            return FanSpeed.MEDIUM;
-        } else {
-            return FanSpeed.HIGH;
+    private numberToFanSpeed(value: number): FanSpeed | null {
+        switch (value) {
+            case 0:
+                return FanSpeed.AUTO;
+            case 25:
+                return FanSpeed.QUIET;
+            case 50:
+                return FanSpeed.LOW;
+            case 75:
+                return FanSpeed.MEDIUM;
+            case 100:
+                return FanSpeed.HIGH;
+            default:
+                this.log.error(`Unknown FanSpeed [${value}]`);
         }
+        return null;
     }
 }
