@@ -1,4 +1,4 @@
-import {CharacteristicValue, HAPStatus, PlatformAccessory, Service} from 'homebridge';
+import {CharacteristicValue, Formats, HAPStatus, PlatformAccessory, Service} from 'homebridge';
 import PanasonicMirAIePlatform from '../platform/panasonicMiraiePlatform';
 import {
     CommandType,
@@ -85,6 +85,7 @@ export default class MirAIeHeaterCoolerAccessory {
         this.service
             .getCharacteristic(this.platform.Characteristic.RotationSpeed)
             .setProps({
+                format: Formats.INT,
                 minValue: 0,
                 maxValue: 100,
                 minStep: 25,
