@@ -1,7 +1,7 @@
 {
   "name": "homebridge-panasonic-miraie-ac-platform",
   "displayName": "Homebridge Panasonic MirAIe AC Platform",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Homebridge platform plugin providing HomeKit support for Panasonic MirAIe air conditioners.",
   "license": "Apache-2.0",
   "author": "thisisharishr",
