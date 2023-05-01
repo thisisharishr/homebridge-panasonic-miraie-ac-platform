@@ -87,7 +87,7 @@ export default class MirAIeHeaterCoolerAccessory {
             .setProps({
                 minValue: 0,
                 maxValue: 100,
-                minStep: 25,
+                minStep: 20,
             })
             .onSet(this.setRotationSpeed.bind(this));
 
@@ -391,13 +391,13 @@ export default class MirAIeHeaterCoolerAccessory {
     private fanSpeedToPercentage(fanSpeed: string): number | null {
         switch (fanSpeed) {
             case "auto":
-                return 0;
+                return 20;
             case "quiet":
-                return 25;
+                return 40;
             case "low":
-                return 50;
+                return 60;
             case "medium":
-                return 75;
+                return 80;
             case "high":
                 return 100;
             default:
@@ -407,11 +407,11 @@ export default class MirAIeHeaterCoolerAccessory {
     }
 
     private percentageToFanSpeed(percentage: number): FanSpeed | null {
-        if (percentage < 25) {
+        if (percentage < 40) {
             return FanSpeed.AUTO;
-        } else if (percentage < 50) {
+        } else if (percentage < 60) {
             return FanSpeed.QUIET;
-        } else if (percentage < 75) {
+        } else if (percentage < 80) {
             return FanSpeed.LOW;
         } else if (percentage < 100) {
             return FanSpeed.MEDIUM;

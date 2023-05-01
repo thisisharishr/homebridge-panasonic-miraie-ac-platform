@@ -45,7 +45,7 @@ export default class MirAIeBroker {
             case CommandType.POWER:
                 return this.generatePowerMessage(basePayload, command.toLowerCase(), topic);
             case CommandType.MODE:
-                return this.generateModeMessages(basePayload, command.toLowerCase(), topic);
+                return this.generateModeMessage(basePayload, command.toLowerCase(), topic);
             case CommandType.TEMPERATURE:
                 return this.generateTemperatureMessage(basePayload, command, topic);
             case CommandType.FAN:
@@ -69,7 +69,7 @@ export default class MirAIeBroker {
         ];
     }
 
-    private generateModeMessages(basePayload, command, topic) {
+    private generateModeMessage(basePayload, command, topic) {
         return [
             {
                 topic,
