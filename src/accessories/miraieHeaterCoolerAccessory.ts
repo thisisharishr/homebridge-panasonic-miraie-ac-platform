@@ -385,16 +385,16 @@ export default class MirAIeHeaterCoolerAccessory {
 
     private fanSpeedToPercentage(fanSpeed: string): number | null {
         switch (fanSpeed) {
-            case FanSpeed.AUTO:
-                return 0.00;
-            case FanSpeed.QUIET:
-                return 0.25;
-            case FanSpeed.LOW:
-                return 0.50;
-            case FanSpeed.MEDIUM:
-                return 0.75;
-            case FanSpeed.HIGH:
-                return 1;
+            case "auto":
+                return 0;
+            case "quiet":
+                return 25;
+            case "low":
+                return 50;
+            case "medium":
+                return 75;
+            case "high":
+                return 100;
             default:
                 this.log.error(`Unknown FanSpeed string [${fanSpeed}]`)
         }
@@ -402,17 +402,15 @@ export default class MirAIeHeaterCoolerAccessory {
     }
 
     private percentageToFanSpeed(percentage: number): FanSpeed | null {
-        this.log.debug(`percentageToFanSpeed() for percentage [${percentage}]`)
-        const value = percentage * 100;
-        if (value < 25) {
+        if (percentage < 25) {
             return FanSpeed.AUTO;
-        } else if (value < 50) {
+        } else if (percentage < 50) {
             return FanSpeed.QUIET;
-        } else if (value < 75) {
+        } else if (percentage < 75) {
             return FanSpeed.LOW;
-        } else if (value < 100) {
+        } else if (percentage < 100) {
             return FanSpeed.MEDIUM;
-        } else if (value == 100) {
+        } else if (percentage == 100) {
             return FanSpeed.HIGH;
         }
         return null;
