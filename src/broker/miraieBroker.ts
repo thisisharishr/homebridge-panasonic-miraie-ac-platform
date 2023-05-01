@@ -87,7 +87,7 @@ export default class MirAIeBroker {
                 topic,
                 payload: {
                     ...basePayload,
-                    acvs: command as number
+                    acvs: parseInt(command)
                 }
             }
         ];

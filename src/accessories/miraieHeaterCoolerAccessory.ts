@@ -253,7 +253,7 @@ export default class MirAIeHeaterCoolerAccessory {
 
             // Rotation Speed (optional)
             const fanSpeed = this.getFanSpeedAsNumber(deviceStatus.acfs);
-            if (fanSpeed) {
+            if (fanSpeed != null) {
                 this.service.getCharacteristic(this.platform.Characteristic.RotationSpeed)
                     .updateValue(fanSpeed);
             }
@@ -323,7 +323,7 @@ export default class MirAIeHeaterCoolerAccessory {
     private async setRotationSpeed(value: CharacteristicValue) {
         this.validateDeviceConnectionStatus();
         let fanSpeed: FanSpeed;
-        switch (value) {
+        switch (value as number) {
             case 0:
                 fanSpeed = FanSpeed.AUTO;
                 break;
