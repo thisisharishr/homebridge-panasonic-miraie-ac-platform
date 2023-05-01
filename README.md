@@ -1,8 +1,8 @@
 # Homebridge Panasonic MirAIe AC Platform
 
 [![GitHub version](https://img.shields.io/github/package-json/v/thisisharishr/homebridge-panasonic-miraie-ac-platform?label=GitHub)](https://github.com/thisisharishr/homebridge-panasonic-miraie-ac-platform)
-[![Publish package to npm](https://img.shields.io/github/workflow/status/thisisharishr/homebridge-panasonic-miraie-ac-platform/Publish%20package%20to%20npm?label=Publish%20to%20npm)](https://github.com/thisisharishr/homebridge-panasonic--miraie-ac-platform/actions/workflows/npm-publish.yml)
-[![npm version](https://img.shields.io/npm/v/homebridge-panasonic-ac-miraie-platform?color=%23cb3837&label=npm)](https://www.npmjs.com/package/homebridge-panasonic-miraie-ac-platform)
+[![Publish package to npm](https://img.shields.io/github/workflow/status/thisisharishr/homebridge-panasonic-miraie-ac-platform/Publish%20package%20to%20npm?label=Publish%20to%20npm)](https://github.com/thisisharishr/homebridge-panasonic-miraie-ac-platform/actions/workflows/npm-publish.yml)
+[![npm version](https://img.shields.io/npm/v/homebridge-panasonic-miraie-ac-platform?color=%23cb3837&label=npm)](https://www.npmjs.com/package/homebridge-panasonic-miraie-ac-platform)
 
 `homebridge-panasonic-miraie-ac-platform` is a dynamic platform plugin for [Homebridge](https://homebridge.io) that provides HomeKit support for Panasonic MirAIe air conditioners over MQTT.
 

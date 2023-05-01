@@ -85,10 +85,9 @@ export default class MirAIeHeaterCoolerAccessory {
         this.service
             .getCharacteristic(this.platform.Characteristic.RotationSpeed)
             .setProps({
-                unit: null,
                 minValue: 0,
-                maxValue: 4,
-                minStep: 1,
+                maxValue: 100,
+                minStep: 25,
             })
             .onSet(this.setRotationSpeed.bind(this));
 
@@ -103,7 +102,7 @@ export default class MirAIeHeaterCoolerAccessory {
             .setProps({
                 minValue: 16,
                 maxValue: 30,
-                minStep: 1,
+                minStep: 0.5,
             })
             .onSet(this.setThresholdTemperature.bind(this));
 
@@ -113,7 +112,7 @@ export default class MirAIeHeaterCoolerAccessory {
             .setProps({
                 minValue: 16,
                 maxValue: 30,
-                minStep: 1,
+                minStep: 0.5,
             })
             .onSet(this.setThresholdTemperature.bind(this));
 
@@ -175,14 +174,14 @@ export default class MirAIeHeaterCoolerAccessory {
             if (deviceStatus.rmtmp) {
                 this.service.updateCharacteristic(
                     this.platform.Characteristic.CurrentTemperature,
-                    deviceStatus.rmtmp,
+                    parseFloat(deviceStatus.rmtmp),
                 );
             }
 
             // Current Heater-Cooler State and Target Heater-Cooler State
             const currentTemperature = this.service.getCharacteristic(
                 this.platform.Characteristic.CurrentTemperature).value as number;
-            const setTemperature = deviceStatus.actmp;
+            const setTemperature = parseFloat(deviceStatus.actmp);
 
             switch (deviceStatus.acmd) {
                 // Auto
@@ -230,8 +229,7 @@ export default class MirAIeHeaterCoolerAccessory {
                         .updateValue(this.platform.Characteristic.CurrentHeaterCoolerState.IDLE);
                     this.service.updateCharacteristic(
                         this.platform.Characteristic.TargetHeaterCoolerState,
-                        // TODO - improvement: AUTO isn't a perfect match, but using it for now.
-                        this.platform.Characteristic.TargetHeaterCoolerState.AUTO,
+                        this.platform.Characteristic.TargetHeaterCoolerState.HEAT,
                     );
                     break;
 
@@ -243,7 +241,6 @@ export default class MirAIeHeaterCoolerAccessory {
                         .updateValue(this.platform.Characteristic.CurrentHeaterCoolerState.IDLE);
                     this.service.updateCharacteristic(
                         this.platform.Characteristic.TargetHeaterCoolerState,
-                        // TODO - improvement: AUTO isn't a perfect match, but using it for now.
                         this.platform.Characteristic.TargetHeaterCoolerState.AUTO,
                     );
                     break;
@@ -269,6 +266,13 @@ export default class MirAIeHeaterCoolerAccessory {
                 this.service.getCharacteristic(this.platform.Characteristic.SwingMode)
                     .updateValue(this.platform.Characteristic.SwingMode.SWING_DISABLED);
             }
+
+            // Cooling Threshold Temperature (optional)
+            // Heating Threshold Temperature (optional)
+            this.service.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+                .updateValue(setTemperature);
+            this.service.getCharacteristic(this.platform.Characteristic.CoolingThresholdTemperature)
+                .updateValue(setTemperature);
         } catch (error) {
             this.log.error('An error occurred while refreshing the device status. ' +
                 'Turn on debug mode for more information.');
@@ -323,16 +327,16 @@ export default class MirAIeHeaterCoolerAccessory {
             case 0:
                 fanSpeed = FanSpeed.AUTO;
                 break;
-            case 1:
+            case 25:
                 fanSpeed = FanSpeed.QUIET;
                 break;
-            case 2:
+            case 50:
                 fanSpeed = FanSpeed.LOW;
                 break;
-            case 3:
+            case 75:
                 fanSpeed = FanSpeed.MEDIUM;
                 break;
-            case 4:
+            case 100:
                 fanSpeed = FanSpeed.HIGH;
                 break;
             default:
@@ -374,7 +378,7 @@ export default class MirAIeHeaterCoolerAccessory {
          * temperature in the worst case. Option 1 would offer full functionality, but decrease
          * the compatibility with the Comfort Cloud app.
          */
-        this.sendDeviceUpdate(this.accessory.context.device.topic[0], value as string, CommandType.TEMPERATURE);
+        this.sendDeviceUpdate(this.accessory.context.device.topic[0], (value as number).toFixed(1), CommandType.TEMPERATURE);
     }
 
     /**
@@ -407,13 +411,13 @@ export default class MirAIeHeaterCoolerAccessory {
             case FanSpeed.AUTO:
                 return 0;
             case FanSpeed.QUIET:
-                return 1;
+                return 25;
             case FanSpeed.LOW:
-                return 2;
+                return 50;
             case FanSpeed.MEDIUM:
-                return 3;
+                return 75;
             case FanSpeed.HIGH:
-                return 4;
+                return 100;
             default:
                 this.log.error(`Unknown FanSpeed string [${fanSpeed}]`);
         }

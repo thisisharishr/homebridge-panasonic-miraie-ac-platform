@@ -59,14 +59,14 @@ export interface MirAIePlatformDeviceStatus {
     "acfs": string; //"quiet"
     "ps": "on" | "off"; //"off" - AC actively on/off status
     "ty": string; //"AC"
-    "rmtmp": number; //"27.5", This is actual room temperature.
+    "rmtmp": string; //"27.5", This is actual room temperature.
     "acdl": number; //0
     "acdc": "on" | "off"; //"on"
     "sid": string; //"rem_5576"
     "acsp": string; //"none",
     "acmd": string; //"cool", - mode
-    "V": number; //"1.75",
-    "mo": number; //"130101",
+    "V": string; //"1.75",
+    "mo": string; //"130101",
     "rssi": number; //-59,
     "acms": "on" | "off"; //"off",
     "acgm": number; //0,
@@ -74,7 +74,7 @@ export interface MirAIePlatformDeviceStatus {
     "cnt": string; //"rem",
     "acec": "on" | "off"; //"off",
     "acmss": number; //0,
-    "actmp": number; //"26.0", this is the temperature set in AC via remote or app
+    "actmp": string; //"26.0", this is the temperature set in AC via remote or app
     "acpms": number; //0,
     "acpm": "on" | "off"; //"off",
     "acvs": number; //5, AC - vertical swing (0 for enable swing)
@@ -83,7 +83,7 @@ export interface MirAIePlatformDeviceStatus {
     "acng": "on" | "off"; //"off",
     "lcmd": string; //"rmtmp", last AC command
     "acngs": "on" | "off"; //"off",
-    "ts": number; //"1665471096",
+    "ts": string; //"1665471096",
 }
 
 export interface MirAIePlatformDeviceConnectionStatus {

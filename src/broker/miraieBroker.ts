@@ -99,7 +99,7 @@ export default class MirAIeBroker {
                 topic,
                 payload: {
                     ...basePayload,
-                    actmp: command as number
+                    actmp: command
                 }
             }
         ];
