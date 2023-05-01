@@ -84,6 +84,11 @@ export default class MirAIeHeaterCoolerAccessory {
         // Rotation Speed (optional)
         this.service
             .getCharacteristic(this.platform.Characteristic.RotationSpeed)
+            .setProps({
+                minValue: 0,
+                maxValue: 100,
+                minStep: 25,
+            })
             .onSet(this.setRotationSpeed.bind(this));
 
         // Swing Mode (optional)
