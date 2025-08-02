@@ -115,4 +115,5 @@ export enum CommandType {
     FAN,
     POWER,
     SWING,
+    DISPLAY_MODE
 }
