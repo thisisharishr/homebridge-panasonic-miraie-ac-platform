@@ -52,8 +52,22 @@ export default class MirAIeBroker {
                 return this.generateFanMessage(basePayload, command.toLowerCase(), topic);
             case CommandType.SWING:
                 return this.generateSwingMessage(basePayload, command, topic);
+            case CommandType.DISPLAY_MODE:
+                return this.generateDisplayModeMessage(basePayload, command, topic);
         }
         return [];
+    }
+
+    private generateDisplayModeMessage(basePayload, command, topic) {
+        return [
+            {
+                topic,
+                payload: {
+                    ...basePayload,
+                    acdc: command === 'on' ? 'on' : 'off'
+                }
+            }
+        ];
     }
 
     private generatePowerMessage(basePayload, command, topic) {

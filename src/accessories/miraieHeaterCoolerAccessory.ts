@@ -17,6 +17,7 @@ import MirAIePlatformLogger from "../utilities/logger";
  */
 export default class MirAIeHeaterCoolerAccessory {
     private service: Service;
+    private displayService: Service | undefined;
     private onlineStatus: boolean = true;
     private log: MirAIePlatformLogger;
 
@@ -120,6 +121,10 @@ export default class MirAIeHeaterCoolerAccessory {
         this.service
             .setCharacteristic(this.platform.Characteristic.TemperatureDisplayUnits,
                 this.platform.Characteristic.TemperatureDisplayUnits.CELSIUS);
+        
+        // Setup display service for controlling the AC display
+        this.setupDisplayService();
+        this.log.debug("Done setting up display characteristic");
 
         // Subscribe to device's MirAIe MQTT status topics for continuous device updates
         // instead of using onGet handlers
@@ -129,6 +134,25 @@ export default class MirAIeHeaterCoolerAccessory {
         this.miraieBroker.subscribe(statusTopics, this.refreshDeviceStatus.bind(this));
         this.miraieBroker.subscribe(connectionStatusTopics, this.refreshDeviceConnectionStatus.bind(this));
     }
+
+    private setupDisplayService() {
+        this.log.debug("Setting up separate Switch service for display control");
+        
+        // Create a Switch service for display control
+        const displayService = this.accessory.getService('AC Display') || 
+            this.accessory.addService(this.platform.Service.Switch, 'AC Display', 'ac-display');
+        
+        // Set up the switch characteristic
+        displayService.getCharacteristic(this.platform.Characteristic.On)
+            .onSet(this.setDisplayMode.bind(this))
+            .onGet(this.getDisplayMode.bind(this));
+        
+        // Store reference for updates
+        this.displayService = displayService;
+        
+        this.log.debug("AC Display switch service created successfully");
+    }
+
 
     /**
      * Updates the device's connection status with as per the {@param deviceConnectionStatus}
@@ -273,6 +297,13 @@ export default class MirAIeHeaterCoolerAccessory {
                 .updateValue(setTemperature);
             this.service.getCharacteristic(this.platform.Characteristic.CoolingThresholdTemperature)
                 .updateValue(setTemperature);
+
+            if (deviceStatus.acdc && this.displayService) {
+                this.displayService.updateCharacteristic(
+                    this.platform.Characteristic.On,
+                    deviceStatus.acdc === "on"
+                );
+            }
         } catch (error) {
             this.log.error('An error occurred while refreshing the device status. ' +
                 'Turn on debug mode for more information.');
@@ -294,6 +325,23 @@ export default class MirAIeHeaterCoolerAccessory {
         this.validateDeviceConnectionStatus();
         const command = value === this.platform.Characteristic.Active.ACTIVE ? "on" : "off";
         this.sendDeviceUpdate(this.accessory.context.device.topic[0], command, CommandType.POWER);
+    }
+
+    private async setDisplayMode(value: CharacteristicValue): Promise<void> {
+        this.validateDeviceConnectionStatus();
+
+        this.displayService?.updateCharacteristic(this.platform.Characteristic.On, value);
+
+        // Send the command to the device
+        this.sendDeviceUpdate(this.accessory.context.device.topic[0], value ? "on" : "off", CommandType.DISPLAY_MODE);
+
+    }
+
+    private async getDisplayMode(): Promise<CharacteristicValue> {
+        this.validateDeviceConnectionStatus();        
+        // Return the current value from the characteristic
+        const currentValue = this.displayService?.getCharacteristic(this.platform.Characteristic.On).value;
+        return currentValue || false;
     }
 
     private async setTargetHeaterCoolerState(value: CharacteristicValue) {
